@@ -32,7 +32,7 @@ export function VariantC() {
       <h2 className="text-lg font-semibold">Conversations</h2>
       <p className="text-sm text-muted-foreground mb-4">Compact table — hover for summary</p>
 
-      <TooltipProvider delayDuration={200}>
+      <TooltipProvider>
         <div className="rounded-lg border">
           <Table>
             <TableHeader>
