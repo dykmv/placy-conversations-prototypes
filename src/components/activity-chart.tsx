@@ -211,9 +211,7 @@ export function ActivityChart(props: ActivityChartProps) {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="hour" tick={{ fontSize: 11 }} interval={1} />
                 <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip
-                  formatter={(value: number) => [value, label]}
-                />
+                <Tooltip />
                 <Bar dataKey="count" name={label} radius={[3, 3, 0, 0]}>
                   {hourlyData.map((entry) => (
                     <Cell
@@ -230,9 +228,7 @@ export function ActivityChart(props: ActivityChartProps) {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="day" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip
-                  formatter={(value: number) => [value, label]}
-                />
+                <Tooltip />
                 <Bar dataKey="count" name={label} radius={[3, 3, 0, 0]}>
                   {dailyData.map((entry) => (
                     <Cell
