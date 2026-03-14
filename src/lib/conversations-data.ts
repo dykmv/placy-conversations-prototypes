@@ -1,7 +1,7 @@
 // Shared mock data for all conversation prototypes
 
 export type Channel = "phone" | "whatsapp" | "email";
-export type Intent = "buy" | "rent" | "sell" | "rent_out" | null;
+export type Intent = "buy" | "rent" | "sell" | "rent_out" | "irrelevant" | null;
 export type Status = "new" | "contacted" | "qualified" | "irrelevant";
 export type PropertyType = "apartment" | "house" | "villa" | "studio" | "office" | "land" | null;
 
@@ -172,7 +172,7 @@ export const conversations: Conversation[] = [
     clientPhone: "+357 97 654 321",
     clientEmail: null,
     summary: "Called about a listing but wrong number. Not interested in property. Wanted a car rental agency.",
-    intent: null,
+    intent: "irrelevant",
     propertyType: null,
     source: "Direct",
     refNumber: null,
@@ -258,6 +258,32 @@ export const conversations: Conversation[] = [
     price: null,
     duration: "0:11",
     messageCount: null,
+    status: "irrelevant",
+    leadLevel: 1,
+    language: "Unknown",
+    humanNeeded: false,
+    providesName: false,
+    providesBudget: false,
+    providesPhone: false,
+    providesLocation: false,
+  },
+  {
+    id: "conv_4410rrwx77gg",
+    date: "Mar 13, 2026",
+    time: "7:02 PM",
+    channel: "whatsapp",
+    clientName: null,
+    clientPhone: "+357 95 222 333",
+    clientEmail: null,
+    summary: "Sent 'Hello' and did not respond to follow-up questions. No further messages.",
+    intent: null,
+    propertyType: null,
+    source: "Bazaraki",
+    refNumber: null,
+    location: null,
+    price: null,
+    duration: null,
+    messageCount: 2,
     status: "irrelevant",
     leadLevel: 1,
     language: "Unknown",
@@ -370,6 +396,7 @@ export function getIntentColor(intent: Intent): string {
     case "rent": return "bg-blue-100 text-blue-700";
     case "sell": return "bg-orange-100 text-orange-700";
     case "rent_out": return "bg-purple-100 text-purple-700";
+    case "irrelevant": return "bg-red-100 text-red-600";
     default: return "bg-gray-100 text-gray-500";
   }
 }

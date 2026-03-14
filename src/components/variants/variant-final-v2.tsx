@@ -18,9 +18,12 @@ function IntentBadge({ intent }: { intent: Conversation["intent"] }) {
       </span>
     );
   }
+  const label = intent === "rent_out" ? "Rent Out"
+    : intent === "irrelevant" ? "Irrelevant"
+    : intent.charAt(0).toUpperCase() + intent.slice(1);
   return (
     <span className={`text-xs font-medium px-2 py-0.5 rounded-full whitespace-nowrap ${getIntentColor(intent)}`}>
-      {intent === "rent_out" ? "Rent Out" : intent.charAt(0).toUpperCase() + intent.slice(1)}
+      {label}
     </span>
   );
 }
