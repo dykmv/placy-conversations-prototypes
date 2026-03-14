@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import dynamic from "next/dynamic";
 
+const VariantFinal = dynamic(() => import("@/components/variants/variant-final").then(m => ({ default: m.VariantFinal })), { loading: () => <p className="p-8 text-muted-foreground">Loading...</p> });
 const VariantA = dynamic(() => import("@/components/variants/variant-a").then(m => ({ default: m.VariantA })), { loading: () => <p className="p-8 text-muted-foreground">Loading...</p> });
 const VariantB = dynamic(() => import("@/components/variants/variant-b").then(m => ({ default: m.VariantB })), { loading: () => <p className="p-8 text-muted-foreground">Loading...</p> });
 const VariantC = dynamic(() => import("@/components/variants/variant-c").then(m => ({ default: m.VariantC })), { loading: () => <p className="p-8 text-muted-foreground">Loading...</p> });
@@ -15,11 +15,12 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       <div className="border-b px-6 py-3">
         <h1 className="text-lg font-semibold">Placy — Conversations Page Prototypes</h1>
-        <p className="text-sm text-muted-foreground">5 layout variants. Click any row/card to open the conversation modal.</p>
+        <p className="text-sm text-muted-foreground">Click any row/card to open the conversation modal.</p>
       </div>
       <div className="px-6 py-4">
-        <Tabs defaultValue="a">
+        <Tabs defaultValue="final">
           <TabsList>
+            <TabsTrigger value="final">Final</TabsTrigger>
             <TabsTrigger value="a">A: Classic Table</TabsTrigger>
             <TabsTrigger value="b">B: Card List</TabsTrigger>
             <TabsTrigger value="c">C: Compact + Tooltip</TabsTrigger>
@@ -27,6 +28,7 @@ export default function Home() {
             <TabsTrigger value="e">E: Two-Line Rows</TabsTrigger>
           </TabsList>
 
+          <TabsContent value="final"><VariantFinal /></TabsContent>
           <TabsContent value="a"><VariantA /></TabsContent>
           <TabsContent value="b"><VariantB /></TabsContent>
           <TabsContent value="c"><VariantC /></TabsContent>
