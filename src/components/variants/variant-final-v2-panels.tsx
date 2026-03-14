@@ -4,13 +4,8 @@ import { useState } from "react";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import {
-  conversations, getChannelIcon, getIntentColor, getDurationOrMessages,
-} from "@/lib/conversations-data";
-import {
-  communications, panelDemoConversationIds,
-} from "@/lib/communications-data";
-import type { Conversation } from "@/lib/conversations-data";
+import { getChannelIcon, getIntentColor } from "@/lib/conversations-data";
+import { communications } from "@/lib/communications-data";
 import type { Communication } from "@/lib/communications-data";
 import { PanelA } from "@/components/panels/panel-a";
 import { PanelB } from "@/components/panels/panel-b";
@@ -18,7 +13,7 @@ import { PanelC } from "@/components/panels/panel-c";
 
 type PanelVariant = "a" | "b" | "c";
 
-function IntentBadge({ intent }: { intent: Conversation["intent"] }) {
+function IntentBadge({ intent }: { intent: Communication["intent"] }) {
   if (!intent) {
     return (
       <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-400 whitespace-nowrap">
@@ -38,9 +33,7 @@ function IntentBadge({ intent }: { intent: Conversation["intent"] }) {
 
 function HumanNeededIcon({ needed }: { needed: boolean }) {
   if (!needed) return null;
-
   const [showTooltip, setShowTooltip] = useState(false);
-
   return (
     <span
       className="relative inline-flex"
@@ -57,32 +50,11 @@ function HumanNeededIcon({ needed }: { needed: boolean }) {
   );
 }
 
-// Filter to only the 4 demo conversations
-const demoConversations = conversations.filter(c =>
-  panelDemoConversationIds.includes(c.id)
-);
-
-function findCommunication(conversationId: string): Communication | null {
-  return communications.find(comm =>
-    comm.dialogs.some(d => d.id === conversationId)
-  ) ?? null;
-}
-
 export function VariantFinalV2Panels() {
   const [panelVariant, setPanelVariant] = useState<PanelVariant>("a");
   const [selectedComm, setSelectedComm] = useState<Communication | null>(null);
-  const [selectedConvId, setSelectedConvId] = useState<string | null>(null);
 
-  const handleRowClick = (c: Conversation) => {
-    const comm = findCommunication(c.id);
-    setSelectedComm(comm);
-    setSelectedConvId(c.id);
-  };
-
-  const handleClose = () => {
-    setSelectedComm(null);
-    setSelectedConvId(null);
-  };
+  const handleClose = () => setSelectedComm(null);
 
   return (
     <div className="mt-4">
@@ -110,67 +82,69 @@ export function VariantFinalV2Panels() {
         ))}
       </div>
 
-      {/* Table — narrows when panel is open */}
-      <div className={`transition-all duration-300 ${selectedComm ? "mr-[500px]" : ""}`}>
-        <div className="rounded-lg border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px]">Updated</TableHead>
-                <TableHead className="w-8" />
-                <TableHead className="w-[180px]">Client</TableHead>
-                <TableHead className="w-[80px]">Intent</TableHead>
-                <TableHead className="w-[70px]">Duration</TableHead>
-                <TableHead className="w-8" />
-                <TableHead>Summary</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {demoConversations.map((c) => (
+      {/* Table — does NOT shrink when panel opens */}
+      <div className="rounded-lg border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">Updated</TableHead>
+              <TableHead className="w-8" />
+              <TableHead className="w-[180px]">Client</TableHead>
+              <TableHead className="w-[80px]">Intent</TableHead>
+              <TableHead className="w-[70px]">Duration</TableHead>
+              <TableHead className="w-8" />
+              <TableHead>Summary</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {communications.map((comm) => {
+              const latest = comm.dialogs[0];
+              const duration = latest.duration ?? (latest.messageCount ? `${latest.messageCount} msgs` : "—");
+              return (
                 <TableRow
-                  key={c.id}
+                  key={comm.id}
                   className={`cursor-pointer hover:bg-muted/50 ${
-                    c.humanNeeded
+                    latest.humanNeeded
                       ? "bg-amber-50 border-l-2 border-l-amber-400 hover:bg-amber-100/60"
                       : ""
                   } ${
-                    selectedConvId === c.id
+                    selectedComm?.id === comm.id
                       ? "bg-blue-50 hover:bg-blue-100/60 ring-1 ring-blue-200"
                       : ""
                   }`}
-                  onClick={() => handleRowClick(c)}
+                  onClick={() => setSelectedComm(comm)}
                 >
                   <TableCell className="text-sm text-muted-foreground">
-                    {c.time}
+                    {latest.time}
                   </TableCell>
                   <TableCell className="text-center text-base px-1">
-                    {getChannelIcon(c.channel)}
+                    {getChannelIcon(latest.channel)}
                   </TableCell>
                   <TableCell className="font-medium text-sm">
-                    {c.clientName || c.clientPhone}
+                    {comm.clientName || comm.clientPhone}
                   </TableCell>
                   <TableCell>
-                    <IntentBadge intent={c.intent} />
+                    <IntentBadge intent={comm.intent} />
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
-                    {getDurationOrMessages(c)}
+                    {duration}
                   </TableCell>
                   <TableCell className="text-center px-1">
-                    <HumanNeededIcon needed={c.humanNeeded} />
+                    <HumanNeededIcon needed={latest.humanNeeded} />
                   </TableCell>
                   <TableCell>
                     <p className="text-sm text-muted-foreground line-clamp-1">
-                      {c.summary}
+                      {latest.summary}
                     </p>
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+              );
+            })}
+          </TableBody>
+        </Table>
       </div>
 
-      {/* Panel */}
+      {/* Panel — overlay, does not affect table layout */}
       {panelVariant === "a" && (
         <PanelA communication={selectedComm} onClose={handleClose} />
       )}

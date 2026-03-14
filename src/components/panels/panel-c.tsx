@@ -150,12 +150,12 @@ function DialogCard({
         </span>
       </div>
 
-      {/* Collapsed summary */}
-      {!expanded && (
-        <div className="px-4 pb-3">
-          <p className="text-sm text-gray-600 truncate">{dialog.summary}</p>
-        </div>
-      )}
+      {/* Summary — always visible */}
+      <div className="px-4 pb-3">
+        <p className={`text-sm text-gray-600 ${!expanded ? "truncate" : ""}`}>
+          {dialog.summary}
+        </p>
+      </div>
 
       {/* Expanded content */}
       {expanded && (
@@ -189,9 +189,6 @@ function DialogCard({
               )}
             </div>
           )}
-
-          {/* Full summary */}
-          <p className="text-sm text-gray-700">{dialog.summary}</p>
 
           {/* Content by channel type */}
           {dialog.channel === "phone" && (
@@ -404,17 +401,17 @@ export function PanelC({ communication, onClose }: PanelProps) {
 
   return (
     <>
-      {/* Backdrop */}
+      {/* Backdrop — semi-transparent overlay covering entire screen */}
       {communication && (
         <div
-          className="fixed inset-0 bg-black/10 z-40"
+          className="fixed inset-0 bg-black/20 z-40"
           onClick={onClose}
         />
       )}
 
-      {/* Panel */}
+      {/* Panel — overlay sliding in from the right */}
       <div
-        className={`fixed right-0 top-0 h-full w-[480px] bg-white border-l border-gray-200 shadow-xl z-50 flex flex-col transition-transform duration-300 ease-in-out ${
+        className={`fixed right-0 top-0 h-full w-[640px] bg-white border-l border-gray-200 shadow-xl z-50 flex flex-col transition-transform duration-300 ease-in-out ${
           communication ? "translate-x-0" : "translate-x-full"
         }`}
       >
