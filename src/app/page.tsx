@@ -3,6 +3,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import dynamic from "next/dynamic";
 
+const VariantFinalV2Panels = dynamic(() => import("@/components/variants/variant-final-v2-panels").then(m => ({ default: m.VariantFinalV2Panels })), { loading: () => <p className="p-8 text-muted-foreground">Loading...</p> });
 const VariantFinalV2 = dynamic(() => import("@/components/variants/variant-final-v2").then(m => ({ default: m.VariantFinalV2 })), { loading: () => <p className="p-8 text-muted-foreground">Loading...</p> });
 const VariantFinal = dynamic(() => import("@/components/variants/variant-final").then(m => ({ default: m.VariantFinal })), { loading: () => <p className="p-8 text-muted-foreground">Loading...</p> });
 const VariantA = dynamic(() => import("@/components/variants/variant-a").then(m => ({ default: m.VariantA })), { loading: () => <p className="p-8 text-muted-foreground">Loading...</p> });
@@ -19,8 +20,9 @@ export default function Home() {
         <p className="text-sm text-muted-foreground">Click any row/card to open the conversation modal.</p>
       </div>
       <div className="px-6 py-4">
-        <Tabs defaultValue="final-v2">
+        <Tabs defaultValue="panels">
           <TabsList>
+            <TabsTrigger value="panels">Detail Panels</TabsTrigger>
             <TabsTrigger value="final-v2">Final V2</TabsTrigger>
             <TabsTrigger value="final">Final V1</TabsTrigger>
             <TabsTrigger value="a">A: Classic Table</TabsTrigger>
@@ -30,6 +32,7 @@ export default function Home() {
             <TabsTrigger value="e">E: Two-Line Rows</TabsTrigger>
           </TabsList>
 
+          <TabsContent value="panels"><VariantFinalV2Panels /></TabsContent>
           <TabsContent value="final-v2"><VariantFinalV2 /></TabsContent>
           <TabsContent value="final"><VariantFinal /></TabsContent>
           <TabsContent value="a"><VariantA /></TabsContent>
